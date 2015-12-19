@@ -1,0 +1,18 @@
+{
+    "Database":
+    {
+        "Address":"",
+        "Username":"",
+        "Password":"",
+        "Protocol":"tcp",
+        "DBname":"kindlefeed"
+
+    },
+    
+    "FeedURL":
+        ["http://www.newyorker.com/feed/everything", "http://www.newyorker.com/feed/articles","http://www.newyorker.com/feed/posts"],
+    "CalibrePath":"",
+    "Cron":"0 * * * *"
+
+
+}
