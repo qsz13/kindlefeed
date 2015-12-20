@@ -37,15 +37,6 @@ func main() {
 
 func fetchFeed(config *Config) {
 
-	dbconfig := config.Database
-	datasource := fmt.Sprintf("%s:%s@%s(%s)/%s", dbconfig.Username, dbconfig.Password, dbconfig.Protocol, dbconfig.Address, dbconfig.DBname)
-	db, err := sql.Open("mysql", datasource)
-	if err != nil {
-		log.Fatal("Database connection failure:\n", err)
-		return
-	}
-	defer db.Close()
-	fmt.Println(datasource)
 	for _, url := range config.FeedURL {
 		log.Println("fetching feed: " + url)
 		resp, err := http.Get(url)
@@ -61,11 +52,22 @@ func fetchFeed(config *Config) {
 		//	for _, item := range feed.Channel.Items {
 		//		fmt.Println(item.Title)
 		//	}
-		saveFeedToDB(&feed, db)
+		saveFeedToDB(&feed, config)
 	}
 }
 
-func saveFeedToDB(feed *Feed, db *sql.DB) {
+func saveFeedToDB(feed *Feed, config *Config) {
+
+	dbconfig := config.Database
+	datasource := fmt.Sprintf("%s:%s@%s(%s)/%s", dbconfig.Username, dbconfig.Password, dbconfig.Protocol, dbconfig.Address, dbconfig.DBname)
+	db, err := sql.Open("mysql", datasource)
+	if err != nil {
+		log.Fatal("Database connection failure:\n", err)
+		return
+	}
+	defer db.Close()
+	fmt.Println(datasource)
+
 	fmt.Println("begin to save")
 	for _, item := range feed.Channel.Items {
 		stmt, err := db.Prepare(
